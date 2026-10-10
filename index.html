@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Plus - Portal de Aprendizaje</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- VISTA 1: INICIO DE SESIÓN -->
+    <div id="login-view" class="view active">
+        <div class="login-split-container">
+            
+            <div class="login-left-pane">
+                <div class="brand-content">
+                    <div class="logo-container">
+                        <video src="./img/logo_bucle_fondo_negro.mp4" autoplay loop muted playsinline class="main-logo-video"></video>
+                    </div>
+                    <h2 class="login-main-title">Tu portal de aprendizaje</h2>
+                    <img src="./img/mujer.png" alt="Estudiante System Plus" class="hero-image">
+                </div>
+            </div>
+
+            <div class="login-right-pane">
+                <div class="glass-form-card">
+                    <h2>Iniciar Sesión</h2>
+                    <p class="form-subtitle">¡Bienvenido de nuevo!<br>Inicia sesión para continuar tu camino</p>
+                    
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label>Usuario</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">👤</span>
+                                <input type="text" id="usuario" placeholder="Ingresa tu usuario (Ej: Admin)" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Contraseña</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="password" placeholder="******** (Ej: system2026)" required>
+                            </div>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-container">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                                Recordarme
+                            </label>
+                        </div>
+
+                        <button type="button" class="btn-glass-primary" onclick="login()">Iniciar Sesión</button>
+                        
+                        <div class="form-links">
+                            <a href="#">¿Olvidaste tu contraseña?</a>
+                            <a href="#">¡Crea tu cuenta aquí!</a>
+                        </div>
+                    </form>
+
+                    <div class="social-login-section">
+                        <p>O continuar con Redes Sociales</p>
+                        <div class="social-buttons">
+                            <button class="social-btn">G</button>
+                            <button class="social-btn">f</button>
+                            <button class="social-btn">in</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- NAVEGACIÓN -->
+    <nav id="main-nav" style="display: none;">
+        <div class="nav-brand" onclick="loadCursosCortos()">
+            <img src="./img/logotipo.png" alt="System Plus" class="nav-logo-img">
+        </div>
+        
+        <div class="nav-links" id="nav-links">
+            <span onclick="loadCursosCortos()">CATÁLOGO</span>
+            <span onclick="loadMyCourses()">MIS CURSOS</span>
+            <span onclick="alert('Sección de Comunidad en desarrollo.')">COMUNIDAD</span>
+        </div>
+
+        <div class="nav-right-container">
+            <div class="nav-search-box" style="position: relative;">
+                <input type="text" id="nav-search-input" placeholder="🔍 Buscar curso..." onkeypress="handleNavSearch(event)" oninput="showSearchSuggestions(this.value)">
+                <div id="search-suggestions" class="search-suggestions-dropdown"></div>
+            </div>
+            <div class="nav-logout">
+                <span onclick="cerrarSesion()">CERRAR SESIÓN</span>
+            </div>
+            <div class="hamburger" onclick="toggleMobileMenu()">☰</div>
+        </div>
+    </nav>
+
+    <!-- VISTA 2: CATÁLOGO DE CURSOS DESPLEGABLES -->
+    <div id="catalog-view" class="view container">
+        <div class="catalog-header" style="margin-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 2rem;">
+            <h2 id="catalog-title">Catálogo de Programas</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Desarrolla habilidades específicas y certificadas en poco tiempo.</p>
+        </div>
+        
+        <div class="course-grid" id="course-grid"></div>
+    </div>
+
+    <!-- VISTA 3: DASHBOARD DEL ESTUDIANTE -->
+    <div id="dashboard-view" class="view container">
+        <button class="back-btn" onclick="loadCursosCortos()">&#8592; Volver al catálogo</button>
+        <h2 id="dash-title">Título del Curso</h2>
+        <p id="dash-res" style="color: var(--text-muted); margin-bottom: 0.5rem; font-size: 0.9rem;"></p>
+        
+        <div class="progress-container">
+            <div class="progress-info">
+                <span>Progreso del Curso</span>
+                <span id="progress-text">0% Completado</span>
+            </div>
+            <div class="progress-bar-bg"><div id="progress-bar-fill" class="progress-bar-fill"></div></div>
+        </div>
+
+        <div class="dashboard-layout">
+            <div class="main-content">
+                
+                <div class="video-player" id="video-player-container">
+                    <div style="text-align: center; padding: 1rem;">
+                        <span style="font-size: 2.5rem; display: block; margin-bottom: 0.5rem; color: #555;">▶</span>
+                        <span id="current-lesson-title" style="color: #f8fafc; font-size: 1.1rem; font-weight: 600;">Selecciona un módulo para comenzar</span>
+                    </div>
+                </div>
+                
+                <!-- AQUI ESTÁN LAS PESTAÑAS CON EL HISTORIAL INCLUIDO -->
+                <div class="course-tabs">
+                    <div class="tab active" id="tab-desc" onclick="changeTab('desc')">Descripción</div>
+                    <div class="tab" id="tab-recursos" onclick="changeTab('recursos')">Recursos</div>
+                    <div class="tab" id="tab-historial" onclick="changeTab('historial')">Historial</div>
+                    <div class="tab" id="tab-comentarios" onclick="changeTab('comentarios')">Comentarios</div>
+                </div>
+                
+                <div class="tab-content" id="tab-content-container">
+                    <p id="dash-desc" style="line-height: 1.6; color: var(--text-muted);"></p>
+                </div>
+                
+            </div>
+
+            <div class="sidebar">
+                <h3>Módulos de Formación</h3>
+                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Haz clic en un módulo para estudiarlo y marcarlo como visto.</p>
+                <ul class="module-list" id="module-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER PROFESIONAL -->
+    <footer id="main-footer" class="main-footer" style="display: none;">
+        <div class="footer-container">
+            <div class="footer-col">
+                <img src="./img/logotipo.png" alt="System Plus" class="footer-logo">
+                <p>Formando a los profesionales del futuro con educación práctica, moderna y de alta calidad.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navegación</h4>
+                <a href="#" onclick="loadCursosCortos()">Catálogo de Cursos</a>
+                <a href="#">Comunidad Estudiantil</a>
+                <a href="#" onclick="loadMyCourses()">Mi Progreso</a>
+            </div>
+            <div class="footer-col">
+                <h4>Legal y Soporte</h4>
+                <a href="#">Términos y Condiciones</a>
+                <a href="#">Políticas de Privacidad</a>
+                <a href="#">Centro de Ayuda</a>
+            </div>
+            <div class="footer-col">
+                <h4>Síguenos</h4>
+                <div class="footer-socials">
+                    <a href="#">Facebook</a>
+                    <a href="#">Instagram</a>
+                    <a href="#">YouTube</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 System Plus. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
